@@ -1,0 +1,68 @@
+CREATE TABLE Room(
+Rid char(5) ,               /*房间号*/
+Rsta char(5),               /*房间状态 */
+Rkind char(20),            /*房间类型*/
+Rwhere char(20),               /*房间位置 */
+Rwhat nvarchar(100),            /*房间描述*/
+Cid char(15),               /*顾客身份证号 */
+Rname char(20),            /*房间类型名称*/
+foreign key(cid) references customer(cid)，
+foreign key(rname) references room(rname)，
+primary key(rid)
+)
+
+CREATE TABLE Room(
+Rid char(5) ,               /*房间号*/
+Rsta char(5),               /*房间状态 */
+Rkind char(20),            /*房间类型*/
+Rwhere char(20),               /*房间位置 */
+Rwhat nvarchar(100),            /*房间描述*/
+Cid char(15),               /*顾客身份证号 */
+Rname char(20),            /*房间类型名称*/
+foreign key(cid) references customer(cid)，
+foreign key(rname) references room(rname)，
+primary key(rid)
+)
+
+CREATE TABLE order(
+Oid char(20) ,               /*订单号*/
+Oin datetime,                 /*入住时间 */
+Oout datetime,              /*离开时间*/
+Room char(20),               /*房间类别 */
+Oiph char(20),              /*联系人电话*/
+Oname char(12),               /*入住人姓名 */
+Osta char(20),            /*订单状态*/
+Cid char(15),               /*顾客身份证号 */
+foreign key(cid) references customer(cid)，
+primary key(Oid)
+)
+
+CREATE TABLE room(
+Rcount char(5) ,               /*房间数量*/
+Rnext char(5),               /*剩余数量 */
+Rbed char(5),              /*床位数*/
+Rname char(20),          /*类型名称 */
+Rmoney char(10),            /*价格收费*/
+Rnet char(15),               /*网络 */
+Rsize char(15),               /*面积大小 */
+primary key(Rname)
+)
+
+CREATE TABLE admin(
+Anum char(20) ,               /*管理员编号*/
+Aacc char(15),                /*账号*/
+Apass char(15),                /*密码 */
+primary key(anum)
+)
+
+
+CREATE TABLE product(
+Pnam char(20) ,               /*商品名称*/
+Pmon char(5),               /*商品价格 */
+pnext char(20),            /*剩余量*/
+Cid char(15),               /*顾客身份证号 */
+Oid char(20),            /*订单号*/
+foreign key(cid) references customer(cid)，
+foreign key(oid) references room(oid)，
+primary key(pnam)
+)
