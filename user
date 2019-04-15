@@ -1,0 +1,64 @@
+from flask import (
+    Blueprint,
+    request,
+    session,
+    render_template,
+    redirect,
+    url_for,
+)
+from Model.User import User
+from functions import (
+    todict,
+    check_regi_para,
+)
+import pymysql
+
+blueprint = Blueprint("User", __name__)
+
+@blueprint.route("/login",methods=["GET","POST"])
+def login():
+    if session.get("username", None) is not None:
+        return redirect(url_for("index.index"))
+    if request.method == "GET":
+        return render_template("login.html")
+    elif request.method == "POST":
+        form = request.form
+        username = form.get("username", None)
+        password = form.get("password", None)
+        if username is None or password is None:
+            return redirect(url_for("User.login"))
+        if User.checklogin(username=username, password=password):
+            ud = User.get_user_by_username(username)
+            session["uid"] = ud["uid"]
+            session["username"] = ud["username"]
+            session["password"] = ud["password"]
+            session["level"] = ud["level"]
+            return redirect(url_for("index.index"))
+        else:
+            return redirect(url_for("User.login"))
+
+
+
+@blueprint.route("/logout", methods=["GET"])
+def logout():
+    for key in session.keys():
+        session.pop(key)
+    return redirect(url_for("index.index"))
+
+
+@blueprint.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "GET":
+        return render_template("regist.html")
+    elif request.method == "POST":
+        form = request.form
+        form = todict(**form)
+    if check_regi_para(**form):
+        u = User(**form)
+        try:
+            u.register()
+        except pymysql.err.IntegrityError as e:
+            return redirect(url_for("User.register"))
+        return redirect(url_for("User.login"))
+    else:
+        return redirect(url_for("User.register"))
